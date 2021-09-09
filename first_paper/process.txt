@@ -1,0 +1,49 @@
+0)FIX one col longformat
+主要为了加一列：tangible assets
+files <- list.files("D:/Google drive local/Financial constraints/Data/merge/")
+包含bank cons manu仨行业的原始数据，只有registered_number, accounts_data和tangible assets
+先小文件合并成一个文件，再转成long
+bank_fix_long %>% arrange(registered_number, accounts_date) %>% 
+  select(-company_name) %>% write_csv("bank_fix_long.csv")
+
+manu_fix_long %>% arrange(registered_number, accounts_date) %>% 
+  select(-company_name) %>% write_csv("manu_fix_long.csv")
+
+cons_fix_long %>% arrange(registered_number, accounts_date) %>% 
+  select(-company_name) %>% write_csv("cons_fix_long.csv")
+
+
+1)left join
+cons_raw <- readRDS("uk_40w_construction_raw_long.rds")
+manu_raw <- readRDS("uk_6w_manufac_raw_long.rds")
+bank_raw <- readRDS("uk_16w_control_raw_long.rds")
+去掉turnover na公司，然后合并上文tangible asset一列
+write_csv(cons_full, "cons_add_ready.csv")
+write_csv(manu_full, "manu_add_ready.csv")
+write_csv(bank_full, "bank_add_ready.csv") 这里要回fame检查一下，确保没有搞错
+
+2) ADD 【仨文件】
+raw <- read_csv("manu_add_ready.csv")
+write_csv(data_w_lag, "manu_w_lag.csv")
+回FAME检查过，也检查过所有lag项没错
+
+3) TRIM
+bank <- read_csv("D:/Google drive local/Financial constraints/Data/bank_w_lag.csv") 
+write_csv(data_reserve, "D:/Google drive local/Financial constraints/Data/bank_trim.csv")
+大刀阔斧看了很多，还是跟paper数据有出入
+
+
+4) Summary
+constru <- read_csv("D:/Google drive local/Financial constraints/Data/cons_trim.csv")
+data <- constru
+
+bank <- read_csv("D:/Google drive local/Financial constraints/Data/bank_trim.csv") 
+data <-  bank
+
+manufac <- read_csv("D:/Google drive local/Financial constraints/Data/manu_trim.csv") 
+data <- manufac
+
+5)GMM 【仨文件】
+
+6)GMM EXPORT 做完直接导出结果
+
